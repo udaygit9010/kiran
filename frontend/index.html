@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fake News Detector</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-white flex flex-col items-center justify-center min-h-screen p-4">
+    <h1 class="text-3xl font-bold mb-4">Fake News Detector</h1>
+    <input id="newsInput" class="w-full max-w-lg p-2 text-black rounded" placeholder="Enter news text here..."/>
+    <button onclick="checkNews()" class="mt-4 px-4 py-2 bg-blue-500 rounded">Check News</button>
+    
+    <div id="result" class="mt-6 p-4 bg-gray-800 rounded w-full max-w-lg hidden">
+        <h2 class="text-lg font-semibold">Analysis Result:</h2>
+        <p id="predictionText" class="mt-2"></p>
+        <p id="confidenceText" class="mt-1 font-bold"></p>
+    </div>
+
+    <script>
+        async function checkNews() {
+            const newsText = document.getElementById("newsInput").value;
+            if (!newsText) return alert("Please enter some text.");
+            
+            const response = await fetch("/predict", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ news_text: newsText })
+            });
+            
+            const data = await response.json();
+            document.getElementById("result").classList.remove("hidden");
+            document.getElementById("predictionText").textContent = data.prediction.label;
+            document.getElementById("confidenceText").textContent = `Confidence: ${Math.round(data.prediction.score * 100)}%`;
+        }
+    </script>
+</body>
+</html>
