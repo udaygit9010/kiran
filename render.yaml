@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: fake-news-api
+    name: fake-news-app
     env: python
     buildCommand: pip install -r backend/requirements.txt
     startCommand: gunicorn backend.app:app
@@ -9,9 +9,3 @@ services:
         sync: false
       - key: FACT_CHECK_API_KEY
         sync: false
-
-  - type: static
-    name: fake-news-ui
-    env: static
-    buildCommand: ""
-    staticPublishPath: frontend/
